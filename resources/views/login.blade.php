@@ -17,7 +17,7 @@
             margin: 4rem auto;
             background-color: #fff;
             padding: 2rem;
-            max-height: 450px;
+            max-height: 500px;
             margin-top: 100px;
         }
 
@@ -67,23 +67,66 @@
             margin-right: 3rem;
         }
     </style>
-    <form role="form" method="post" action="{{ route('login') }}">
-        <div class="jumbotron">
-            <div class="container">
-                <img src="/img/icon.png" width="100%" height="100%" />
-                <h2>TromBoy</h2>
-                <div class="box">
-                    {!! csrf_field() !!}
-                    <input type="text" name="username" id="username" placeholder="Username">
-                    <input type="password" placeholder="password" name="password" id="password">
-                    <div class="g-recaptcha" data-sitekey="6LdJkxEUAAAAADC3R9p16tearsPZ4hse7UwZyTOz"></div>
-                    <button class="btn btn-default full-width"><span class="glyphicon glyphicon-ok"></span></button>
-                </div>
+    <form id="loginform" method="post" action="{{ route('login') }}">
+        <input type="hidden" name="username" id="username">
+        <input type="hidden" name="password" id="password">
+        {!! csrf_field() !!}
+        <input type="hidden" name="otp" id="otp">
+    </form>
+
+    <div class="jumbotron">
+        <div class="container">
+            <img src="/img/icon.png" width="100%" height="100%" />
+            <h2>TromBoy</h2>
+            <div class="box">
+                <input type="text" name="username_v" id="username_v" placeholder="Username">
+                <input type="password" placeholder="password" name="password_v" id="password_v">
+                <input type="text" value="" placeholder="otp" name="otp_v" id="otp_v" class="hide">
+                <button onclick="request_otp(this);" data-toggle="loading" class="btn btn-default full-width"><span class="glyphicon glyphicon-ok"></span></button>
             </div>
         </div>
-    </form>
+    </div>
 @endsection
 
 @section('script')
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script>
+        function request_otp(btn){
+            var uname = $("#username_v").val();
+            var pwd = $("#password_v").val();
+            var otp = $("#otp_v").val();
+
+            if($(btn).data('otp') == null)
+            {
+                $(btn).attr('disabled', '');
+                $(btn).html('Sending OTP...');
+                $.ajax({
+                    url: "{{ route('request_otp') }}",
+                    type: "POST",
+                    async: true,
+                    data: {username: uname, password: pwd, '_token': "{{ csrf_token() }}"}
+                }).done(function (res){
+                    if(res.status == 'sent'){
+                        $("#otp_v").removeClass('hide');
+                        $(btn).removeAttr('disabled');
+                        $(btn).html('Login');
+                        $(btn).data('otp', '1');
+                    }else if(res.status == 'error' && res.error == 'user_pass_fail'){
+                        alert('Please enter correct Login details.');
+                        $(btn).removeAttr('disabled');
+                        $(btn).html('Login');
+                    }
+                })
+            }else{
+                if($("#otp").val() != '' && $("#otp").val().length == 8)
+                {
+                    $(btn).attr('disabled', '');
+                    $(btn).html('Logging in...');
+                    $("#username").val(uname);
+                    $("#password").val(pwd);
+                    $("#otp").val(otp);
+                    $("#loginform").submit();
+                }
+            }
+        }
+    </script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -23,20 +24,17 @@ class LoginController extends Controller
 
     public function postLogin(Request $request)
     {
+
         $this->validate($request, [
             "username"=>"required",
             "password"=>"required",
+            "otp"=>"required",
         ]);
 
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,"secret=6LdJkxEUAAAAAAWLrt_LBVnx0py_z96GqGAyKgWK&response=".$request->get('g-recaptcha-response'));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec ($ch);
-        curl_close ($ch);
-        dd($response);
+        $otp = Session::get('otp');
+        if($otp != $request->otp){
+            return redirect()->route('first')->with(['info'=>"Invalid OTP.", "type"=>"danger"]);
+        }
 
         $user = User::where('username', $request->username)->first();
         if ( $user != null &&  $user->password == $request->password){
@@ -51,5 +49,26 @@ class LoginController extends Controller
         Auth::Logout();
 
         return redirect()->route('first')->with(['info'=>"Logged out successfully", "type"=>"success"]);
+    }
+
+    public function request_otp(Request $request)
+    {
+        $this->validate($request, [
+            "username"=>"required",
+            "password"=>"required",
+        ]);
+
+        $user = User::where('username', $request->username)->first();
+        if ( $user != null &&  $user->password == $request->password){
+            $mobile = urlencode($user->mobile);
+            $otp = rand(10000000, 99999999);
+            Session::put('otp', $otp);
+            session('otp', $otp);
+            $message = urlencode("OTP FOR LOGIN ".$otp.'. TromBoy');
+            //$res = file_get_contents("http://sms.hostingfever.in/sendSMS?username=spantech&message=$message&sendername=ONLINE&smstype=TRANS&numbers=$mobile&apikey=4d360261-78da-4d98-826c-d02a6771545c");
+            return ['status'=>'sent'];
+        }else
+            return ['status'=>'error', 'error'=>"user_pass_fail"];
+
     }
 }
