@@ -29,6 +29,15 @@ class LoginController extends Controller
         ]);
 
 
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,"secret=6LdJkxEUAAAAAAWLrt_LBVnx0py_z96GqGAyKgWK&response=".$request->get('g-recaptcha-response'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec ($ch);
+        curl_close ($ch);
+        dd($response);
+
         $user = User::where('username', $request->username)->first();
         if ( $user != null &&  $user->password == $request->password){
             Auth::login($user);

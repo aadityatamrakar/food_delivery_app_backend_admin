@@ -17,6 +17,7 @@ class User extends Migration
             $table->string('name');
             $table->string('username');
             $table->string('password');
+            $table->string('remember_token');
             $table->timestamps();
         });
     }
