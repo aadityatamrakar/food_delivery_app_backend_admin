@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/coupon/edit/{id}', 'HomeController@post_coupon_edit');
     Route::post('/coupon/del', 'HomeController@delCoupon')->name('coupon.remove');
 });
+
 Route::post('/request_otp', "LoginController@request_otp")->name("request_otp");
 Route::get('/logout', "LoginController@logout")->name("logout");
 Route::get('/barcode/test', "HomeController@getBarcode")->name("barcode.test");

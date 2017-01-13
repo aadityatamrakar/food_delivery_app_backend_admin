@@ -24,17 +24,16 @@ class LoginController extends Controller
 
     public function postLogin(Request $request)
     {
-
         $this->validate($request, [
             "username"=>"required",
             "password"=>"required",
             "otp"=>"required",
         ]);
 
-        $otp = Session::get('otp');
-        if($otp != $request->otp){
-            return redirect()->route('first')->with(['info'=>"Invalid OTP.", "type"=>"danger"]);
-        }
+//        $otp = Session::get('otp');
+//        if($otp != $request->otp){
+//            return redirect()->route('first')->with(['info'=>"Invalid OTP.", "type"=>"danger"]);
+//        }
 
         $user = User::where('username', $request->username)->first();
         if ( $user != null &&  $user->password == $request->password){
@@ -60,7 +59,7 @@ class LoginController extends Controller
 
         $user = User::where('username', $request->username)->first();
         if ( $user != null &&  $user->password == $request->password){
-            $mobile = urlencode($user->mobile);
+            $mobile = $user->mobile;
             $otp = rand(10000000, 99999999);
             Session::put('otp', $otp);
             session('otp', $otp);
