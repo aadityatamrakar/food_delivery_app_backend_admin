@@ -7,15 +7,14 @@ use App\Category;
 use App\Product;
 use App\Restaurant;
 use Illuminate\Http\Request;
-use Symfony\Component\Process\Process;
 
 class RestaurantsController extends Controller
 {
     public function index()
     {
-        return view('restaurants.index');
+        $pc = new PaymentController();
+        return view('restaurants.index', compact('pc'));
     }
-
     public function viewRestaurants($id)
     {
         $restaurant = Restaurant::where('id', $id)->first();
@@ -23,7 +22,6 @@ class RestaurantsController extends Controller
         return view('restaurants.view', compact('restaurant'));
 
     }
-
     public function getEdit($id)
     {
         $restaurant = Restaurant::where('id', $id)->first();
@@ -31,7 +29,6 @@ class RestaurantsController extends Controller
         return view('restaurants.edit', compact('restaurant'));
 
     }
-
     public function postEdit($id, Request $request)
     {
         $request->cuisines = json_encode($request->cuisines);
@@ -96,19 +93,16 @@ class RestaurantsController extends Controller
 
         return redirect()->route('restaurants')->with(["info"=>"Restaurant Updated Successfully", "type"=>"success"]);
     }
-
     public function getAdd()
     {
         $restaurant = new Restaurant();
 
         return view('restaurants.add', compact('restaurant'));
     }
-
     public function getDelete($id)
     {
         return view('restaurants.delete');
     }
-
     public function postDelete($id, Request $request)
     {
         if($request->delete == '' && ($request->confirm == 'Yes' || $request->confirm == 'yes')){
@@ -117,14 +111,12 @@ class RestaurantsController extends Controller
         }else
             return redirect()->route("restaurants")->with(["info"=>"User Canceled.", "type"=>"warning"]);
     }
-
     public function getTime($id)
     {
         $restaurant = Restaurant::select(['id', 'name', 'city_id', 'delivery_hours', 'pickup_hours', 'dinein_hours'])->where("id", $id)->first();
 
         return view('restaurants.time', compact(["restaurant", "id"]));
     }
-
     public function postTime($id, $time, Request $request)
     {
         if($time == 'del')
@@ -146,14 +138,12 @@ class RestaurantsController extends Controller
 
         return 'ok';
     }
-
     public function getMenu($id)
     {
         $restaurant = Restaurant::select(['id', 'name'])->where('id', $id)->first();
 
         return view('restaurants.menu.index', compact('restaurant'));
     }
-
     public function postArea($id, Request $request)
     {
         $data = json_decode($request->data, true);
@@ -180,7 +170,6 @@ class RestaurantsController extends Controller
 
         return 'ok';
     }
-    
     public function postAdd(Request $request)
     {
         $request->cuisines = json_encode($request->cuisines);
@@ -244,14 +233,11 @@ class RestaurantsController extends Controller
 
         return redirect()->route('restaurants.add')->with(["info"=>"Restaurant added Successfully", "type"=>"success"]);
     }
-
-
     public function addCategory($id)
     {
         $restaurant_id = $id;
         return view('restaurants.menu.addcategory', compact('restaurant_id'))->with('edit', false);
     }
-
     public function postAddCategory($id, Request $request)
     {
         $this->validate($request, [
@@ -268,8 +254,6 @@ class RestaurantsController extends Controller
         else
             return redirect()->route('restaurants.addCategory', ['id'=>$id])->with(['info'=>"Successfully Added", 'type'=>"success"]);
     }
-
-
     public function delCategory(Request $request)
     {
         $this->validate($request, [
@@ -280,7 +264,6 @@ class RestaurantsController extends Controller
 
         return 'ok';
     }
-
     public function editCategory($id, $category_id)
     {
         $restaurant_id = $id;
@@ -288,7 +271,6 @@ class RestaurantsController extends Controller
 
         return view('restaurants.menu.addcategory', compact(['restaurant_id', 'category']))->with('edit', true);
     }
-
     public function postEditCategory($id, $category_id, Request $request)
     {
         $this->validate($request, [
@@ -305,18 +287,15 @@ class RestaurantsController extends Controller
             return back()->withInput()->with(['info'=>"Duplicate !!", 'type'=>"danger"]);
         }
     }
-
     public function getProducts($id)
     {
         return view('restaurants.menu.products', compact('id'));
     }
-
     public function addProduct($id)
     {
         $category_id = $id;
         return view('restaurants.menu.addproduct', compact('category_id'))->with('edit', false);
     }
-
     public function postAddProduct($id, Request $request)
     {
         $this->validate($request, [
@@ -334,8 +313,6 @@ class RestaurantsController extends Controller
         else
             return redirect()->route('restaurants.addProduct', ['id'=>$id])->with(['info'=>"Successfully Added", 'type'=>"success"]);
     }
-
-
     public function delProduct(Request $request)
     {
         $this->validate($request, [
@@ -346,7 +323,6 @@ class RestaurantsController extends Controller
 
         return 'ok';
     }
-
     public function editProduct($id, $product_id)
     {
         $category_id = $id;
@@ -354,7 +330,6 @@ class RestaurantsController extends Controller
 
         return view('restaurants.menu.addproduct', compact(['category_id', 'product']))->with('edit', true);
     }
-
     public function postEditProduct($id, $product_id, Request $request)
     {
         $this->validate($request, [
@@ -380,5 +355,4 @@ class RestaurantsController extends Controller
 
         return back()->withInput()->with(['info'=>"Duplicate !!", 'type'=>"danger"]);
     }
-
 }

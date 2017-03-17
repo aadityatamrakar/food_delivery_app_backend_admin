@@ -20,7 +20,7 @@
                     <td>{{ $customer->name }}</td>
                     <td>{{ $customer->mobile }}</td>
                     <td>{{ \App\City::find($customer->city)->name }}</td>
-                    <td><a href="{{ route('customers.orders', ['id'=>$customer->id]) }}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-bitcoin"></i> Wallet</a> <a href="{{ route('customers.orders', ['id'=>$customer->id]) }}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Orders</a> <a href="{{ route('customers.view', ['id'=>$customer->id]) }}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-user"></i> View</a> <a href="#" onclick="removeCustomer('{{ $customer->id }}', this)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-user"></i> Del</a></td>
+                    <td><a href="{{ route('customers.wallet', ['id'=>$customer->id]) }}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-bitcoin"></i> Wallet</a> <a href="{{ route('customers.orders', ['id'=>$customer->id]) }}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Orders</a> <a href="{{ route('customers.view', ['id'=>$customer->id]) }}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-user"></i> View</a> <a href="#" onclick="removeCustomer('{{ $customer->id }}', this)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-user"></i> Del</a></td>
                 </tr>
             @endforeach
         </tbody>

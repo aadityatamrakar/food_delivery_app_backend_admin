@@ -26,4 +26,18 @@ class Restaurant extends Model
     {
         return $this->hasMany('App\Order');
     }
+
+    public function payments()
+    {
+        return $this->hasMany('App\Payment');
+    }
+
+//    public function outstanding(){
+//        $orders = $this->hasMany('App\Order');
+//        $payments = $this->hasMany('App\Payment');
+//        $this->total_transaction = $orders->sum('gtotal');
+//        $this->total_payment = $payments->sum('amount');
+//        $this->comm = ($this->total_transaction-$this->total_payment)*($this->comm_percent/100);
+//        return $this;
+//    }
 }

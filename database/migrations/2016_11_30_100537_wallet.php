@@ -17,6 +17,7 @@ class Wallet extends Migration
             $table->string('type');
             $table->string('capture');
             $table->string('mode');
+            $table->string('reason');
             $table->float('amount');
             $table->integer('order_id');
             $table->integer('user_id');

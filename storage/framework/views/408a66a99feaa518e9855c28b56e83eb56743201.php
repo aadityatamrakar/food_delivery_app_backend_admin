@@ -16,13 +16,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Masters <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('city') }}">City & Area</a></li>
-                        <li><a href="{{ route('restaurants') }}">Restaurants</a></li>
-                        <li><a href="{{ route('customers') }}">Customers</a></li>
-                        <li><a href="{{ route('coupon') }}">Coupons</a></li>
+                        <li><a href="<?php echo e(route('city')); ?>">City & Area</a></li>
+                        <li><a href="<?php echo e(route('restaurants')); ?>">Restaurants</a></li>
+                        <li><a href="<?php echo e(route('customers')); ?>">Customers</a></li>
+                        <li><a href="<?php echo e(route('coupon')); ?>">Coupons</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ route('orders') }}">Orders</a></li>
+                <li><a href="<?php echo e(route('orders')); ?>">Orders</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -34,15 +34,15 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Payments <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('payment.index') }}?requestedonly=1">Requested</a></li>
-                        <li><a href="{{ route('payment.index') }}">Completed</a></li>
+                        <li><a href="<?php echo e(route('payment.index')); ?>?requestedonly=1">Requested</a></li>
+                        <li><a href="<?php echo e(route('payment.index')); ?>">Completed</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ route('customers') }}">Users</a></li>
-                <li><a href="{{ route('wallet.index') }}">Wallet</a></li>
+                <li><a href="<?php echo e(route('customers')); ?>">Users</a></li>
+                <li><a href="<?php echo e(route('wallet.index')); ?>">Wallet</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ route('logout') }}">Logout</a></li>
+                <li><a href="<?php echo e(route('logout')); ?>">Logout</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

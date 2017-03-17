@@ -1,29 +1,27 @@
-@extends('partials.app_nav')
-
-@section('style')
+<?php $__env->startSection('style'); ?>
     <style>
         .myinput{
             width:100%;
             margin: 0;
         }
     </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
-    @if(isset($restaurant))
-         <h2>Orders | Restaurant: {{ $restaurant->name }}</h2>
-    @elseif(isset($customer))
-        <h2>Orders | Customer: {{ $customer->name }}</h2>
-    @else
+<?php $__env->startSection('content'); ?>
+    <?php if(isset($restaurant)): ?>
+         <h2>Orders | Restaurant: <?php echo e($restaurant->name); ?></h2>
+    <?php elseif(isset($customer)): ?>
+        <h2>Orders | Customer: <?php echo e($customer->name); ?></h2>
+    <?php else: ?>
         <h2>Orders</h2>
-    @endif
+    <?php endif; ?>
     <hr>
     <table class="table table-bordered" id="order_tbl">
         <thead>
         <tr>
             <th width="5%">#</th>
-            @if(!isset($customer))<th>User</th>@endif
-            @if(!isset($restaurant))<th>Restaurant</th>@endif
+            <?php if(!isset($customer)): ?><th>User</th><?php endif; ?>
+            <?php if(!isset($restaurant)): ?><th>Restaurant</th><?php endif; ?>
             <th width="5%">Info</th>
             <th width="5%">Amount</th>
             <th width="5%">Coupon</th>
@@ -35,27 +33,27 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($orders as $index=>$order)
+        <?php foreach($orders as $index=>$order): ?>
             <tr>
-                <td><a href="{{ route('orders.view', ['id'=>$order->id]) }}">{{ $order->id }}</a></td>
-                @if(!isset($customer))<td><a href="{{ route('customers.view', ["id"=>$order->user->id]) }}" target="child">{{ $order->user->name }}</a></td>@endif
-                @if(!isset($restaurant))<td><a href="{{ route('restaurants.view', ["id"=>$order->restaurant->id]) }}" target="_blank">{{ $order->restaurant->name }}</a></td>@endif
-                <td><a href="{{ route('orders.view', ['id'=>$order->id]) }}">view</a></td>
-                <td>{{ $order->gtotal }}</td>
-                <td>{{ $order->coupon!=''?\App\Coupon::find($order->coupon)->code:'' }}</td>
-                <td>{{ $order->deliver }}</td>
-                <td>{{ $order->status }}</td>
-                <td>{{ $order->payment_modes }}</td>
-                <td>{{ $order->city }}</td>
-                <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y h:i:s A') }}</td>
+                <td><a href="<?php echo e(route('orders.view', ['id'=>$order->id])); ?>"><?php echo e($order->id); ?></a></td>
+                <?php if(!isset($customer)): ?><td><a href="<?php echo e(route('customers.view', ["id"=>$order->user->id])); ?>" target="child"><?php echo e($order->user->name); ?></a></td><?php endif; ?>
+                <?php if(!isset($restaurant)): ?><td><a href="<?php echo e(route('restaurants.view', ["id"=>$order->restaurant->id])); ?>" target="_blank"><?php echo e($order->restaurant->name); ?></a></td><?php endif; ?>
+                <td><a href="<?php echo e(route('orders.view', ['id'=>$order->id])); ?>">view</a></td>
+                <td><?php echo e($order->gtotal); ?></td>
+                <td><?php echo e($order->coupon!=''?\App\Coupon::find($order->coupon)->code:''); ?></td>
+                <td><?php echo e($order->deliver); ?></td>
+                <td><?php echo e($order->status); ?></td>
+                <td><?php echo e($order->payment_modes); ?></td>
+                <td><?php echo e($order->city); ?></td>
+                <td><?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y h:i:s A')); ?></td>
             </tr>
-        @endforeach
+        <?php endforeach; ?>
         </tbody>
         <tfoot>
         <tr>
             <td></td>
-            @if(!isset($customer))<td></td>@endif
-            @if(!isset($restaurant))<td></td>@endif
+            <?php if(!isset($customer)): ?><td></td><?php endif; ?>
+            <?php if(!isset($restaurant)): ?><td></td><?php endif; ?>
             <td></td>
             <td></td>
             <td></td>
@@ -95,9 +93,9 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
     <script>
         $(document).ready(function (){
             $('[data-toggle="popover"]').popover({
@@ -149,4 +147,5 @@
             $("#cartBody").html(html);
         })
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('partials.app_nav', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

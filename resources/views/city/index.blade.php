@@ -114,6 +114,11 @@
 
 @section('script')
     <script>
+
+        $("#area").on('keypress', function (e){
+            if(e.keyCode == 13) addArea();
+        });
+
         $('#viewArea').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var id = button.data('id');
@@ -199,7 +204,7 @@
         {
             if($("#area").val().length > 0)
             {
-                $("#addArea").modal("hide");
+                //$("#addArea").modal("hide");
                 var area = $("#area").val();
                 var id = $("#city_id").val();
                 $.ajax({

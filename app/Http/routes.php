@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/category/{id}/product/{prod_id}/edit', 'RestaurantsController@postEditProduct');
     Route::post('/category/product/del', 'RestaurantsController@delProduct')->name('delProduct');
     Route::get('/orders', 'OrdersController@index')->name('orders');
+    Route::get('/orders/view/{id}', 'OrdersController@view_cart')->name('orders.view');
+    Route::post('/orders/status_update/{id}', 'OrdersController@change_status')->name('orders.changeStatus');
     Route::get('/orders/restaurant/{id}', 'OrdersController@indexRestaurant')->name('restaurants.orders');
     Route::get('/orders/customer/{id}', 'OrdersController@indexCustomer')->name('customers.orders');
     Route::get('/customers', 'HomeController@customers_index')->name('customers');
@@ -54,8 +56,26 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/coupon/edit/{id}', 'HomeController@coupon_edit')->name('coupon.edit');
     Route::post('/coupon/edit/{id}', 'HomeController@post_coupon_edit');
     Route::post('/coupon/del', 'HomeController@delCoupon')->name('coupon.remove');
+
+    Route::get('/payment', 'PaymentController@index')->name('payment.index');
+    Route::post('/payment/request', 'PaymentController@payment_request')->name('payment.request');
+    Route::post('/payment/remove', 'PaymentController@payment_remove')->name('payment.remove');
+    Route::post('/payment/save', 'PaymentController@payment_save')->name('payment.save');
+
+    Route::get('/wallet/customer/{customer_id}', 'WalletController@index')->name('customers.wallet');
+    Route::get('/wallet/all', 'WalletController@all_transaction')->name('wallet.all_transactions');
+    Route::get('/wallet/manage', 'WalletController@manage')->name('wallet.index');
+    Route::post('/wallet/details', 'WalletController@details')->name('wallet.details');
+    Route::post('/wallet/update', 'WalletController@update')->name('wallet.update');
+
 });
 
 Route::post('/request_otp', "LoginController@request_otp")->name("request_otp");
 Route::get('/logout', "LoginController@logout")->name("logout");
-Route::get('/barcode/test', "HomeController@getBarcode")->name("barcode.test");
+
+Route::post('/api/check_bal',['middleware'=>'api', 'uses'=>"HomeController@check_bal"]);
+Route::post('/api/payout',['middleware'=>'api', 'uses'=>"HomeController@request_payment"]);
+
+//Route::group(['middleware' => 'api'], function () {
+//
+//});

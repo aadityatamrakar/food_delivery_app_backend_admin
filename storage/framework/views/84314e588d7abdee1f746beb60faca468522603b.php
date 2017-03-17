@@ -10,13 +10,13 @@
 </head>
 <body>
 
-    @include('partials.notify')
+    <?php echo $__env->make('partials.notify', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <div class="container">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </div>
 
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    @yield('script')
+    <?php echo $__env->yieldContent('script'); ?>
 </body>
 </html>

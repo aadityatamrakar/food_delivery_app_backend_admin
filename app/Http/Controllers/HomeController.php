@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Coupon;
 use App\Customer;
+use App\Payment;
+use App\Restaurant;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -114,5 +117,36 @@ class HomeController extends Controller
         ]);
         Coupon::where("id", $request->id)->first()->delete();
         return 'ok';
+    }
+
+    public function check_bal()
+    {
+        $parameters = str_replace(' ','', strtolower($_POST['comments']));
+        $sender = substr($_POST['sender'], 2);
+        if($parameters == 'bal'){
+            $restaurant = Restaurant::where('contact_no', $sender)->first();
+            $pc = new PaymentController();
+            $message = "Your outstanding amount is Rs. ".$pc->outstanding($restaurant->id)->outstanding;
+            $requested = Payment::where([['restaurant_id', $restaurant->id], ['status', 'requested']])->get()->sum('amount');
+            $message .= ', Pending requested amount: Rs. '.$requested.', which makes your total outstanding Rs. '.($pc->outstanding($restaurant->id)->outstanding+$requested);
+            $this->sendSMS($sender, $message);
+        }
+    }
+
+    public function request_payment()
+    {
+        $parameters = str_replace(' ','', strtolower($_POST['comments']));
+        $sender = substr($_POST['sender'], 2);
+        if($parameters == 'payout'){
+            $restaurant = Restaurant::where('contact_no', $sender)->first();
+            $pc = new PaymentController();
+            Payment::create([
+                'restaurant_id'=>$restaurant->id,
+                'amount'=>$pc->outstanding($restaurant->id)->outstanding,
+                'status'=>"requested"
+            ]);
+            $message = 'New payment request has been generated.';
+            $this->sendSMS($sender, $message);
+        }
     }
 }

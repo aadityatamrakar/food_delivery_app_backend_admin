@@ -19,4 +19,9 @@ class Order extends Model
     {
         return $this->belongsTo('App\Restaurant');
     }
+
+    public function transactions()
+    {
+        return $this->hasMany('App\wallet', 'order_id');
+    }
 }

@@ -1,8 +1,7 @@
-@extends('partials.app')
-@section('content')
+<?php $__env->startSection('content'); ?>
     <style>
         body {
-            background: url(https://habrastorage.org/files/c9c/191/f22/c9c191f226c643eabcce6debfe76049d.jpg);
+            background: url(http://habrastorage.org/files/c9c/191/f22/c9c191f226c643eabcce6debfe76049d.jpg);
         }
 
         .jumbotron {
@@ -67,10 +66,11 @@
             margin-right: 3rem;
         }
     </style>
-    <form id="loginform" method="post" action="{{ route('login') }}">
+    <form id="loginform" method="post" action="<?php echo e(route('login')); ?>">
         <input type="hidden" name="username" id="username">
         <input type="hidden" name="password" id="password">
-        {!! csrf_field() !!}
+        <?php echo csrf_field(); ?>
+
         <input type="hidden" name="otp" id="otp">
     </form>
 
@@ -86,8 +86,8 @@
             </div>
         </div>
     </div>
-@endsection
-@section('script')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('script'); ?>
     <script>
         function request_otp(btn){
             var uname = $("#username_v").val();
@@ -99,10 +99,10 @@
                 $(btn).attr('disabled', '');
                 $(btn).html('Sending OTP...');
                 $.ajax({
-                    url: "{{ route('request_otp') }}",
+                    url: "<?php echo e(route('request_otp')); ?>",
                     type: "POST",
                     async: true,
-                    data: {username: uname, password: pwd, '_token': "{{ csrf_token() }}"}
+                    data: {username: uname, password: pwd, '_token': "<?php echo e(csrf_token()); ?>"}
                 }).done(function (res){
                     if(res.status == 'sent'){
                         $("#otp_v").removeClass('hide');
@@ -128,4 +128,5 @@
             }
         }
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('partials.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

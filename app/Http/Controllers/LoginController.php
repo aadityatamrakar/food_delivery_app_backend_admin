@@ -30,10 +30,10 @@ class LoginController extends Controller
             "otp"=>"required",
         ]);
 
-//        $otp = Session::get('otp');
-//        if($otp != $request->otp){
-//            return redirect()->route('first')->with(['info'=>"Invalid OTP.", "type"=>"danger"]);
-//        }
+        $otp = Session::get('otp');
+        if($otp != $request->otp){
+            return redirect()->route('first')->with(['info'=>"Invalid OTP.", "type"=>"danger"]);
+        }
 
         $user = User::where('username', $request->username)->first();
         if ( $user != null &&  $user->password == $request->password){
@@ -64,7 +64,7 @@ class LoginController extends Controller
             Session::put('otp', $otp);
             session('otp', $otp);
             $message = urlencode("OTP FOR LOGIN ".$otp.'. TromBoy');
-            //$res = file_get_contents("http://sms.hostingfever.in/sendSMS?username=spantech&message=$message&sendername=ONLINE&smstype=TRANS&numbers=$mobile&apikey=4d360261-78da-4d98-826c-d02a6771545c");
+            $this->SendSMS($mobile,$message);
             return ['status'=>'sent'];
         }else
             return ['status'=>'error', 'error'=>"user_pass_fail"];
