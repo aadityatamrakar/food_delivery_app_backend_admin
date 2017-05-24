@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/orders', 'OrdersController@index')->name('orders');
     Route::get('/orders/view/{id}', 'OrdersController@view_cart')->name('orders.view');
     Route::post('/orders/status_update/{id}', 'OrdersController@change_status')->name('orders.changeStatus');
+    Route::post('/orders/resend_details/{id}', 'OrdersController@resend_details')->name('orders.resend_details');
     Route::get('/orders/restaurant/{id}', 'OrdersController@indexRestaurant')->name('restaurants.orders');
     Route::get('/orders/customer/{id}', 'OrdersController@indexCustomer')->name('customers.orders');
     Route::get('/customers', 'HomeController@customers_index')->name('customers');
@@ -65,8 +66,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/wallet/customer/{customer_id}', 'WalletController@index')->name('customers.wallet');
     Route::get('/wallet/all', 'WalletController@all_transaction')->name('wallet.all_transactions');
     Route::get('/wallet/manage', 'WalletController@manage')->name('wallet.index');
+    Route::get('/wallet/summary', 'WalletController@summary')->name('wallet.summary');
     Route::post('/wallet/details', 'WalletController@details')->name('wallet.details');
     Route::post('/wallet/update', 'WalletController@update')->name('wallet.update');
+
+
+    Route::get('/banner/index', 'BannerController@index')->name('banner.index');
+    Route::get('/banner/delete/{id}', 'BannerController@delete')->name('banner.delete');
+    Route::post('/banner/upload', 'BannerController@upload')->name('banner.upload');
 
 });
 
@@ -75,6 +82,8 @@ Route::get('/logout', "LoginController@logout")->name("logout");
 
 Route::post('/api/check_bal',['middleware'=>'api', 'uses'=>"HomeController@check_bal"]);
 Route::post('/api/payout',['middleware'=>'api', 'uses'=>"HomeController@request_payment"]);
+
+Route::get('/test', "HomeController@test")->name("test");
 
 //Route::group(['middleware' => 'api'], function () {
 //

@@ -15,6 +15,7 @@
             <th>Valid Till</th>
             <th>Times</th>
             <th>New Only</th>
+            <th>Used</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -31,6 +32,7 @@
                 <td>{{ $coupon->valid_till }}</td>
                 <td>{{ $coupon->times }}</td>
                 <td>{{ $coupon->new_only }}</td>
+                <td>{{ App\Order::where([['coupon', $coupon->id], ['status', 'CMPT']])->count() }}</td>
                 <td><a href="{{ route('coupon.edit', ['id'=>$coupon->id]) }}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Edit</a> <a href="#" onclick="removeCoupon('{{ $coupon->id }}}')" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i> Del</a></td>
             </tr>
         @endforeach

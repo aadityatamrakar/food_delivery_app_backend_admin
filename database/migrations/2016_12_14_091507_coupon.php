@@ -23,6 +23,7 @@ class Coupon extends Migration
             $table->timestamp('valid_till');
             $table->string('times');
             $table->string('new_only');
+            $table->text('description');
             $table->timestamps();
         });
     }

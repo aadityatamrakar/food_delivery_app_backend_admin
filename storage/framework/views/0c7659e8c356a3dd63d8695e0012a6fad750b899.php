@@ -1,7 +1,7 @@
 <?php $__env->startSection('content'); ?>
     <style>
         body {
-            background: url(http://habrastorage.org/files/c9c/191/f22/c9c191f226c643eabcce6debfe76049d.jpg);
+            background: url(https://habrastorage.org/files/c9c/191/f22/c9c191f226c643eabcce6debfe76049d.jpg);
         }
 
         .jumbotron {

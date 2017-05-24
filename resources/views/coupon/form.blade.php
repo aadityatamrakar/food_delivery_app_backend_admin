@@ -1,7 +1,7 @@
 <form class="form-horizontal" method="post" action="{{ $route }}">
     <fieldset>
-        {!! csrf_field() !!}
-        <!-- Form Name -->
+    {!! csrf_field() !!}
+    <!-- Form Name -->
         <legend>{{ $title }} Coupon</legend>
 
         <!-- Text input-->
@@ -96,6 +96,13 @@
                     <input type="radio" name="new_only" id="new_only-1" value="no" {{ $coupon->new_only?$coupon->new_only=='no'?'checked="checked"':'':'' }}>
                     No
                 </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="description">Description</label>
+            <div class="col-md-6">
+                <textarea id="description" name="description" class="form-control">{{ $coupon->description?:old('description') }}</textarea>
             </div>
         </div>
         <!-- Button -->

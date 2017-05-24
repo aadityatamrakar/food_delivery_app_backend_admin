@@ -26,6 +26,8 @@ class Order extends Migration
             $table->string('coupon')->nullable();
             $table->string('packing_fee')->nullable();
             $table->string('delivery_fee')->nullable();
+            $table->string('mobile2')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

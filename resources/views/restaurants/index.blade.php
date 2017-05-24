@@ -39,7 +39,7 @@
                 <td>{{ \App\City::where("id", $restaurant->city_id)->first()->name }}</td>
                 <td>{{ $restaurant->contact_no }}</td>
                 <td>
-                    @if($pc->outstanding($restaurant->id)->outstanding>0)
+                    @if($pc->outstanding($restaurant->id)->outstanding!=0)
                         <button data-toggle="modal" data-target="#paymentRequestModal" data-id="{{ $restaurant->id }}" data-name="{{ $restaurant->name }}" data-outstanding="{{ $pc->outstanding($restaurant->id)->outstanding }}" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-send"></i></button>
                     @endif
                     Rs. {{ round($pc->outstanding($restaurant->id)->outstanding, 0) }}

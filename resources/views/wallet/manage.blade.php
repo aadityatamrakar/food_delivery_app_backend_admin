@@ -1,7 +1,7 @@
 @extends('partials.app_nav')
 
 @section('content')
-    <form class="form-horizontal" action="{{ route("wallet.update") }}" method="post">
+    <form class="form-horizontal" id="form" action="{{ route("wallet.update") }}" method="post">
         <fieldset>
         {!! csrf_field() !!}
         <!-- Form Name -->
@@ -70,6 +70,10 @@
 
 @section('script')
     <script>
+        $("#save").click(function (e){
+            $(this).attr('disabled', '');
+            $("#form").submit();
+        });
         $("#customer_mobile").on('keyup', function (){
             if($(this).val().length == 10)
             {

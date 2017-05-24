@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Coupon;
 use App\Customer;
+use App\Order;
 use App\Payment;
 use App\Restaurant;
 use Carbon\Carbon;
@@ -82,6 +83,7 @@ class HomeController extends Controller
         $coupon->min_amt        =   $request->min_amt;
         $coupon->times          =   $request->times;
         $coupon->new_only       =   $request->new_only;
+        $coupon->description       =   $request->description;
         $coupon->valid_from     =   Carbon::parse($request->valid_from);
         $coupon->valid_till     =   Carbon::parse($request->valid_till);
         $coupon->save();
@@ -102,7 +104,7 @@ class HomeController extends Controller
             "new_only"     =>  "required",
         ]);
 
-        $data = $request->only(['code', 'return_type', 'percent', 'max_amount', 'min_amt', 'valid_from', 'valid_till', 'times', 'new_only']);
+        $data = $request->only(['code', 'return_type', 'percent', 'max_amount', 'min_amt', 'valid_from', 'valid_till', 'times', 'new_only', 'description']);
         $coupon = Coupon::create($data);
         $coupon->valid_from = Carbon::parse($request->valid_from);
         $coupon->valid_till = Carbon::parse($request->valid_till);
@@ -147,6 +149,23 @@ class HomeController extends Controller
             ]);
             $message = 'New payment request has been generated.';
             $this->sendSMS($sender, $message);
+        }
+    }
+
+    public function test()
+    {
+        $time = 0;
+        $orders = Order::where('status', 'PROC')->get();
+        foreach($orders as $order){
+            if($order->type == 'delivery'){
+                $time = $order->restaurant->delivery_time;
+            }else if($order->type == 'pickup'){
+                $time = $order->restaurant->pickup_time;
+            }
+            if(Carbon::now()->diffInMinutes(Carbon::parse($order->created_at)) > $time){
+                $order->status='CMPT';
+                $order->save();
+            }
         }
     }
 }

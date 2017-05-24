@@ -34,25 +34,28 @@ class RestaurantsController extends Controller
         $request->cuisines = json_encode($request->cuisines);
 
         $this->validate($request, [
-            'name'              =>"required",
-            'address'           =>"required",
-            'city_id'           =>"required|exists:city,id",
-            'pincode'           =>"required|numeric|digits:6",
-            'owner_name'        =>"required",
-            'contact_no'        =>"required|numeric|digits:10",
-            'contact_no_2'      =>"required|numeric|digits:10",
-            'telephone'         =>"numeric",
-            'email'             =>"required|email",
-            'type'              =>"required",
-            'speciality'        =>"required",
-            'comm_percent'      =>"required",
-            'delivery_time'     =>"numeric",
-            'pickup_time'       =>"numeric",
-            'dinein_time'       =>"numeric",
-            'delivery_fee'      =>"numeric",
-            'min_delivery_amt'  =>"numeric",
-            'packing_fee'       =>"numeric",
-            'payment_modes'     =>"required",
+            'name'              => "required",
+            'address'           => "required",
+            'city_id'           => "required|exists:city,id",
+            'pincode'           => "required|numeric|digits:6",
+            'owner_name'        => "required",
+            'contact_no'        => "required|numeric|digits:10",
+            'contact_no_2'      => "required|numeric|digits:10",
+            'telephone'         => "numeric",
+            'email'             => "required|email",
+            'type'              => "required",
+            'speciality'        => "required",
+            'comm_percent'      => "required",
+            'delivery_time'     => "numeric",
+            'pickup_time'       => "numeric",
+            'dinein_time'       => "numeric",
+            'delivery_fee'      => "numeric",
+            'min_delivery_amt'  => "numeric",
+            'packing_fee'       => "numeric",
+            'train_time'        => "numeric",
+            'vat_tax'           => "numeric",
+            'svc_tax'           => "numeric",
+            'payment_modes'     => "required",
         ]);
 
         $restaurant = Restaurant::where("id", $request->id)->first();
@@ -71,6 +74,7 @@ class RestaurantsController extends Controller
         $restaurant->delivery_time = $request->delivery_time?:null;
         $restaurant->pickup_time = $request->pickup_time?:null;
         $restaurant->dinein_time = $request->dinein_time?:null;
+        $restaurant->train_time = $request->train_time?:null;
         $restaurant->delivery_fee = $request->delivery_fee?:null;
         $restaurant->min_delivery_amt = $request->min_delivery_amt?:null;
         $restaurant->packing_fee = $request->packing_fee?:null;
@@ -82,6 +86,8 @@ class RestaurantsController extends Controller
         $restaurant->account_ifsc = $request->account_ifsc;
         $restaurant->account_bank = $request->account_bank;
         $restaurant->cuisines = $request->cuisines;
+        $restaurant->vat_tax = $request->vat_tax;
+        $restaurant->svc_tax = $request->svc_tax;
 
         $restaurant->save();
 
@@ -113,26 +119,27 @@ class RestaurantsController extends Controller
     }
     public function getTime($id)
     {
-        $restaurant = Restaurant::select(['id', 'name', 'city_id', 'delivery_hours', 'pickup_hours', 'dinein_hours'])->where("id", $id)->first();
+        $restaurant = Restaurant::where("id", $id)->first();
 
         return view('restaurants.time', compact(["restaurant", "id"]));
     }
     public function postTime($id, $time, Request $request)
     {
-        if($time == 'del')
-        {
+        if($time == 'del') {
             $restaurant = Restaurant::where('id', $id)->first();
             $restaurant->delivery_hours = $request->data;
             $restaurant->save();
-        }else if($time == 'pkp')
-        {
+        }else if($time == 'pkp') {
             $restaurant = Restaurant::where('id', $id)->first();
             $restaurant->pickup_hours = $request->data;
             $restaurant->save();
-        }else if($time == 'dine')
-        {
+        }else if($time == 'dine') {
             $restaurant = Restaurant::where('id', $id)->first();
             $restaurant->dinein_hours = $request->data;
+            $restaurant->save();
+        }else if($time == 'train') {
+            $restaurant = Restaurant::where('id', $id)->first();
+            $restaurant->train_hours = $request->data;
             $restaurant->save();
         }
 
@@ -194,6 +201,9 @@ class RestaurantsController extends Controller
             'min_delivery_amt'  =>  "numeric",
             'packing_fee'       =>  "numeric",
             'payment_modes'     =>  "required",
+            'train_time'        => "numeric",
+            'vat_tax'           => "numeric",
+            'svc_tax'           => "numeric",
         ]);
 
         $restaurant = Restaurant::create([
@@ -213,6 +223,7 @@ class RestaurantsController extends Controller
             'delivery_time'     =>  $request->delivery_time?:null,
             'pickup_time'       =>  $request->pickup_time?:null,
             'dinein_time'       =>  $request->dinein_time?:null,
+            'train_time'        =>  $request->train_time?:null,
             'delivery_fee'      =>  $request->delivery_fee?:null,
             'min_delivery_amt'  =>  $request->min_delivery_amt?:null,
             'packing_fee'       =>  $request->packing_fee?:null,
@@ -223,6 +234,8 @@ class RestaurantsController extends Controller
             'account_no'        =>  $request->account_no,
             'account_bank'      =>  $request->account_bank,
             'account_ifsc'      =>  $request->account_ifsc,
+            'svc_tax'           =>  $request->svc_tax,
+            'vat_tax'           =>  $request->vat_tax,
         ]);
 
         if($request->file('logo')->isValid()) {
@@ -231,7 +244,7 @@ class RestaurantsController extends Controller
             $restaurant->save();
         }
 
-        return redirect()->route('restaurants.add')->with(["info"=>"Restaurant added Successfully", "type"=>"success"]);
+        return redirect()->route('restaurants.time', ['id'=>$restaurant->id])->with(["info"=>"Restaurant added Successfully", "type"=>"success"]);
     }
     public function addCategory($id)
     {

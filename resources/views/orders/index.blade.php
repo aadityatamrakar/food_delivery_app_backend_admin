@@ -14,6 +14,8 @@
          <h2>Orders | Restaurant: {{ $restaurant->name }}</h2>
     @elseif(isset($customer))
         <h2>Orders | Customer: {{ $customer->name }}</h2>
+    @elseif(isset($coupon))
+        <h2>Orders | Coupon: {{ $coupon->code }}</h2>
     @else
         <h2>Orders</h2>
     @endif
@@ -26,7 +28,7 @@
             @if(!isset($restaurant))<th>Restaurant</th>@endif
             <th width="5%">Info</th>
             <th width="5%">Amount</th>
-            <th width="5%">Coupon</th>
+            @if(!isset($coupon))<th width="5%">Coupon</th>@endif
             <th width="5%">Deliver</th>
             <th width="5%">Status</th>
             <th width="5%">Payment</th>
@@ -42,10 +44,10 @@
                 @if(!isset($restaurant))<td><a href="{{ route('restaurants.view', ["id"=>$order->restaurant->id]) }}" target="_blank">{{ $order->restaurant->name }}</a></td>@endif
                 <td><a href="{{ route('orders.view', ['id'=>$order->id]) }}">view</a></td>
                 <td>{{ $order->gtotal }}</td>
-                <td>{{ $order->coupon!=''?\App\Coupon::find($order->coupon)->code:'' }}</td>
+                @if(!isset($coupon))<td>{{ $order->coupon!=''?\App\Coupon::find($order->coupon)->code:'' }}</td>@endif
                 <td>{{ $order->deliver }}</td>
                 <td>{{ $order->status }}</td>
-                <td>{{ $order->payment_modes }}</td>
+                <td>{{ ($wallet = App\wallet::where([['order_id', $order->id], ['type', 'added']])->first())!=null?$wallet->mode:"COD" }}</td>
                 <td>{{ $order->city }}</td>
                 <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y h:i:s A') }}</td>
             </tr>
@@ -58,6 +60,7 @@
             @if(!isset($restaurant))<td></td>@endif
             <td></td>
             <td></td>
+            @if(!isset($coupon))<td></td>@endif
             <td></td>
             <td></td>
             <td></td>

@@ -14,7 +14,8 @@ class Restaurant extends Model
         'telephone', 'email', 'speciality', 'comm_percent', 'cuisines', 'type',
         'delivery_time', 'pickup_time', 'dinein_time', 'delivery_fee', 'min_delivery_amt',
         'packing_fee', 'payment_modes', 'account_holder',
-        'account_no', 'account_bank', 'account_ifsc', 'dinein_hours'
+        'account_no', 'account_bank', 'account_ifsc', 'dinein_hours',
+        'vat_tax', 'svc_tax', 'train_time', 'train_hours'
     ];
 
     public function categories()

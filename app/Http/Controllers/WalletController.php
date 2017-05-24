@@ -29,6 +29,12 @@ class WalletController extends Controller
         return ['name'=>$customer->name, 'bal'=>$bal, 'status'=>"ok"];
     }
 
+    public function summary()
+    {
+        $transactions = wallet::orWhere('type', 'removed')->orWhere('type', 'added')->where('reason', '!=', 'APP')->whereNotNull('reason')->get();
+        return view('wallet.summary', compact(['transactions']));
+    }
+
     public function all_transaction()
     {
         return view('wallet.all_transaction');

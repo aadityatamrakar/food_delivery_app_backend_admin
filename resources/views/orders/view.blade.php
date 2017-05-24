@@ -13,7 +13,10 @@
                             <tbody>
                             <tr>
                                 <th>Order No</th>
-                                <td>{{ $order->id }}</td>
+                                <td>
+                                    {{ $order->id }}
+                                    <button class="btn btn-xs btn-primary" data-toggle="resend"><i class="glyphicon glyphicon-send"></i> Resend Details</button>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Order Time</th>
@@ -98,7 +101,7 @@
                                 <tr>
                                     <th>Amount</th>
                                     @if($coupon->return_type == 'cashback')
-                                        <td>{{ $order->transactions->where("type", 'cashback_recieved')->first()->amount }}</td>
+                                        <td>{{ $order->transactions->where("type", 'cashback_recieved')->first()!=null?$order->transactions->where("type", 'cashback_recieved')->first()->amount:'Awaiting Confirmation' }}</td>
                                     @else
                                         <td></td>
                                     @endif
@@ -172,7 +175,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="changeStatus()">Update</button>
+                    <button type="button" class="btn btn-primary" data-toggle="changeStatus">Update</button>
                 </div>
             </div>
         </div>
@@ -181,6 +184,11 @@
 
 @section('script')
     <script>
+        $('[data-toggle="changeStatus"]').click(function (){
+            $(this).attr('disabled', '');
+            changeStatus();
+        });
+
         function changeStatus(){
             var status = $("#status").val();
             $.ajax({
@@ -197,5 +205,20 @@
                 }
             });
         }
+
+        $('[data-toggle="resend"]').click(function () {
+            $(this).attr('disabled', '');
+            $.ajax({
+                url: "{{ route('orders.resend_details', ['id'=>$order->id]) }}",
+                type: "POST",
+                data: {'_token': "{{ csrf_token() }}"}
+            }).done(function (res){
+                if(res.status == 'ok'){
+                    $.notify("Details Sent!", 'success');
+                }else{
+                    $.notify(res.error, 'error');
+                }
+            });
+        });
     </script>
 @endsection

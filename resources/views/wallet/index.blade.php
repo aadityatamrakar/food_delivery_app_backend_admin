@@ -2,9 +2,7 @@
 
 @section('content')
     <h3>Wallet - <a href="{{ route('customers.view', ['id'=>$customer->id]) }}">{{ $customer->name }}</a>, Current Balance: Rs. {{ $bal }}</h3>
-
     <hr>
-
     <table class="table table-bordered" id="wallet_tbl">
         <thead>
         <tr>

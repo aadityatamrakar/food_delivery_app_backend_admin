@@ -101,6 +101,20 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-md-4 control-label" for="vat_tax">VAT Tax</label>
+            <div class="col-md-6">
+                <input id="vat_tax" name="vat_tax" type="text" value="{{ old('vat_tax')?:$restaurant->vat_tax }}" class="form-control input-md">
+                {!! $errors->first('vat_tax', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="svc_tax">Service Tax</label>
+            <div class="col-md-6">
+                <input id="svc_tax" name="svc_tax" type="text" value="{{ old('svc_tax')?:$restaurant->svc_tax }}" class="form-control input-md">
+                {!! $errors->first('svc_tax', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-md-4 control-label" for="speciality">Most popular dish</label>
             <div class="col-md-6">
                 <input id="speciality" name="speciality" type="text" value="{{ old('speciality')?:$restaurant->speciality }}" class="form-control input-md" required="">
@@ -123,6 +137,21 @@
                 {!! $errors->first('cuisines', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
+
+        <!-- Prepended checkbox -->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="train_time">Train ?</label>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" {{ $restaurant->train_time!=null?'checked':'' }} data-target="train_time" data-toggle="toggle_check">
+                    </span>
+                    <input id="train_time" {{ $restaurant->train_time==null?'disabled':'' }} name="train_time" placeholder="Train Time" type="text" value="{{ old('train_time')?:$restaurant->train_time }}" class="form-control input-md" required="">
+                    {!! $errors->first('train_time', '<p class="help-block">:message</p>') !!}
+                </div>
+            </div>
+        </div>
+
 
         <!-- Prepended checkbox -->
         <div class="form-group">
@@ -181,7 +210,7 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="packing_fee">Packing Fee</label>
             <div class="col-md-6">
-                <input id="packing_fee" name="packing_fee" type="text" value="{{ old('packing_fee')?:$restaurant->packing_fee }}" class="form-control input-md" required="">
+                <input id="packing_fee" name="packing_fee" type="text" value="{{ old('packing_fee')?:$restaurant->packing_fee }}" class="form-control input-md">
                 {!! $errors->first('packing_fee', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
