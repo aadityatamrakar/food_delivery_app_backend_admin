@@ -50,6 +50,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/customers', 'HomeController@customers_index')->name('customers');
     Route::get('/customers/{id}', 'HomeController@customers_view')->name('customers.view');
     Route::post('/customers/del', 'HomeController@delCustomer')->name('removeCustomer');
+    Route::get('/referral', 'HomeController@referral')->name('referral');
+    Route::post('/referral/del', 'HomeController@referral_del')->name('removeReferral');
 
     Route::get('/coupon', 'HomeController@coupon')->name('coupon');
     Route::get('/coupon/add', 'HomeController@coupon_add')->name('coupon.add');

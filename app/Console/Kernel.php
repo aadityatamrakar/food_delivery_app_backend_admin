@@ -31,9 +31,9 @@ class Kernel extends ConsoleKernel
             $time = 0;
             $orders = Order::where('status', 'PROC')->get();
             foreach($orders as $order){
-                if($order->type == 'delivery'){
+                if($order->deliver == 'delivery'){
                     $time = $order->restaurant->delivery_time;
-                }else if($order->type == 'pickup'){
+                }else if($order->deliver == 'pickup'){
                     $time = $order->restaurant->pickup_time;
                 }
                 if(Carbon::now()->diffInMinutes(Carbon::parse($order->created_at)) > $time){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Coupon;
 use App\Customer;
+use App\Leads;
 use App\Order;
 use App\Payment;
 use App\Restaurant;
@@ -42,6 +43,19 @@ class HomeController extends Controller
 
         Customer::where("id", $request->id)->first()->delete();
 
+        return 'ok';
+    }
+
+    public function referral()
+    {
+        return view('customers.referral');
+    }
+    public function referral_del(Request $request)
+    {
+        $this->validate($request, [
+            'id' =>"required"
+        ]);
+        Leads::where("id", $request->id)->first()->delete();
         return 'ok';
     }
 

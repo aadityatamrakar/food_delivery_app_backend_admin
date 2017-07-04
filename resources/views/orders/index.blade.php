@@ -47,7 +47,11 @@
                 @if(!isset($coupon))<td>{{ $order->coupon!=''?\App\Coupon::find($order->coupon)->code:'' }}</td>@endif
                 <td>{{ $order->deliver }}</td>
                 <td>{{ $order->status }}</td>
-                <td>{{ ($wallet = App\wallet::where([['order_id', $order->id], ['type', 'added']])->first())!=null?$wallet->mode:"COD" }}</td>
+                @if( ($wallet = App\wallet::where([['order_id', $order->id], ['type', 'paid_for_order']])->first()) != null )
+                    <td>{{ $wallet->amount == ($order->gtotal+$order->discount)?"Wallet":"Wallet+COD" }}</td>
+                @else
+                    <td>COD</td>
+                @endif
                 <td>{{ $order->city }}</td>
                 <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y h:i:s A') }}</td>
             </tr>

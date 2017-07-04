@@ -19,6 +19,7 @@
                         <li><a href="{{ route('city') }}">City & Area</a></li>
                         <li><a href="{{ route('restaurants') }}">Restaurants</a></li>
                         <li><a href="{{ route('customers') }}">Customers</a></li>
+                        <li><a href="{{ route('referral') }}">Referral</a></li>
                         <li><a href="{{ route('coupon') }}">Coupons</a></li>
                         <li><a href="{{ route('banner.index') }}">Banner</a></li>
                     </ul>

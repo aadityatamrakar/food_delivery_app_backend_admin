@@ -66,24 +66,38 @@ class PaymentController extends Controller
 
         $online_order_gtotal = 0;
         $cod_order_gtotal = 0;
-        $outstanding_amt = 0;
+        $other_additional_amt = $outstanding_amt = 0;
         foreach($orders as $order)
         {
-            if(wallet::where([['order_id', $order->id], ['type', 'added']])->first() !=null){
-                $online_order_gtotal += $order->gtotal+$order->discount;
-            }else{
-                $cod_order_gtotal += $order->gtotal+$order->discount;
+            $paid = null;
+            $online_paid_amt = 0;
+            if(($wallet = wallet::where([['order_id', $order->id], ['type', 'paid_for_order']])->first()) !=null){
+                if($wallet->amount == ($order->gtotal+$order->discount)) {
+                    $paid = 'paid';
+                    $online_order_gtotal += ($order->gtotal+$order->discount)-($order->packing_fee+$order->delivery_fee);
+                    $other_additional_amt += ($order->packing_fee+$order->delivery_fee);
+                } else {
+                    $paid = 'partial';
+                    $online_order_gtotal += $wallet->amount;
+                    $online_paid_amt = $wallet->amount;
+                }
+            }
+
+            if($paid == null){
+                $cod_order_gtotal += ($order->gtotal+$order->discount)-($order->packing_fee+$order->delivery_fee);
+            }else if($paid == 'partial'){
+                $cod_order_gtotal += (($order->gtotal+$order->discount)-($order->packing_fee+$order->delivery_fee) - $online_paid_amt);
             }
         }
 
         $outstanding_amt = ((100-$restaurant->comm_percent)/100)*$online_order_gtotal;
         $outstanding_amt -= ($restaurant->comm_percent/100)*$cod_order_gtotal;
+
+        // for adding delivery and packing fee amount in online payments to restaurant
+        $outstanding_amt += $other_additional_amt;
+
         $restaurant->outstanding = $outstanding_amt;
-//        $restaurant->total_transaction = $restaurant->orders->sum('gtotal');
-//        $restaurant->total_comm = ($restaurant->total_transaction)*($restaurant->comm_percent/100);
-//        $restaurant->transaction_wo_comm = $restaurant->total_transaction - $restaurant->total_comm;
-//        $restaurant->total_payment = $restaurant->payments->sum('amount');
-//        $restaurant->outstanding= $restaurant->transaction_wo_comm-$restaurant->total_payment;
+
         return $restaurant;
     }
 }
